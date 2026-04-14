@@ -56,8 +56,8 @@ KAFKA_TOPIC=weather_data
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5433
 POSTGRES_DB=openmeteo-weather
-POSTGRES_USER=admin
-POSTGRES_PASSWORD=password123
+POSTGRES_USER=your-username
+POSTGRES_PASSWORD=your-password
 
 # Spark
 SPARK_CHECKPOINT_PATH=./tmp/checkpoints/weather_to_db
@@ -110,8 +110,8 @@ Add PostgreSQL as a data source. Since Grafana runs inside Docker, use the **int
 |----------|----------------------|
 | Host     | `postgres:5432`      |
 | Database | `openmeteo-weather`  |
-| User     | `admin`              |
-| Password | `password123`        |
+| User     | `your-username`              |
+| Password | `your-password`        |
 | SSL Mode | `disable`            |
 
 > **Note:** From the host machine (e.g., a local SQL client), connect to PostgreSQL on `localhost:5433`. Inside the Docker network, services reach PostgreSQL at `postgres:5432`.
