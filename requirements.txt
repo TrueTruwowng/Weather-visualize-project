@@ -1,0 +1,5 @@
+python-dotenv>=1.0.0
+loguru>=0.7.0
+openmeteo-requests>=1.2.0
+kafka-python>=2.0.2
+pyspark>=3.3.0
