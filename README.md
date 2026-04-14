@@ -104,7 +104,7 @@ Access Grafana at [http://localhost:3000](http://localhost:3000) with the defaul
 - **Username:** `admin`
 - **Password:** `admin`
 
-Add PostgreSQL as a data source:
+Add PostgreSQL as a data source. Since Grafana runs inside Docker, use the **internal** Docker hostname and port:
 
 | Field    | Value                |
 |----------|----------------------|
@@ -113,6 +113,8 @@ Add PostgreSQL as a data source:
 | User     | `admin`              |
 | Password | `password123`        |
 | SSL Mode | `disable`            |
+
+> **Note:** From the host machine (e.g., a local SQL client), connect to PostgreSQL on `localhost:5433`. Inside the Docker network, services reach PostgreSQL at `postgres:5432`.
 
 ## Logs
 
