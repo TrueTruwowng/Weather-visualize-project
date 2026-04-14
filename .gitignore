@@ -1,0 +1,28 @@
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# Local app/runtime files
+/tmp/checkpoints/
+tmp/
+logs/
+
+# VS Code
+.vscode/
+
+# OS files
+Thumbs.db
+.DS_Store
