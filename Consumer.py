@@ -103,8 +103,8 @@ processed_df = df.selectExpr("CAST(value AS STRING)") \
     .select(from_json(col("value"), schema).alias("data")) \
     .select("data.*") \
     .withColumn("event_time", col("timestamp").cast("timestamp")) \
-    .withWatermark("event_time", "10 minutes") \
-    .groupBy(window(col("event_time"), "5 minutes"), "city", "province") \
+    .withWatermark("event_time", "30 seconds") \
+    .groupBy(window(col("event_time"), "15 seconds"), "city", "province") \
     .agg(avg("temperature").alias("avg_temp"), avg("wind_speed").alias("avg_wind_speed"))
 
 query = processed_df.writeStream \

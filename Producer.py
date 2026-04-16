@@ -51,7 +51,7 @@ def fetch_weather_api(city_data):
     """Gửi request đến Open-Meteo API để lấy dữ liệu thời tiết."""
     if not city_data:
         return []
-
+    
     try:
         lats = [float(city['lat']) for city in city_data]
         lons = [float(city['lng']) for city in city_data]
@@ -62,11 +62,13 @@ def fetch_weather_api(city_data):
             "latitude": lats,
             "longitude": lons,
             "current": ["temperature_2m", "relative_humidity_2m", "wind_speed_10m"],
-            "timezone": "Asia/Bangkok"
+            "timezone": "Asia/Bangkok",
+            "forecast_days": 1
         }
         
         logger.info("Requesting API data for all cities...")
         return openmeteo.weather_api(url, params=params)
+        time.sleep(0.5)
     except Exception as e:
         logger.error(f"API Error: {e}")
         return []
@@ -107,6 +109,15 @@ def get_weather_and_produce():
     if not cities:
         logger.error("No city data found. Exiting...")
         return
+    try:
+        # Gửi thử 1 tọa độ duy nhất (Hà Nội) để thông luồng DNS/SSL
+        openmeteo_requests.Client().weather_api(
+            "https://api.open-meteo.com/v1/forecast", 
+            params={"latitude": 21.0, "longitude": 105.8, "current": "temperature_2m"}
+        )
+        logger.success("Warm-up successful.")
+    except:
+        logger.warning("Warm-up failed.")
 
     logger.info("Starting weather data collection loop...")
     while True:
@@ -118,8 +129,8 @@ def get_weather_and_produce():
             else:
                 logger.warning("No responses received from API, skipping this tick.")
 
-            logger.info("Waiting 1 minutes for the next update...")
-            time.sleep(60) 
+            logger.info("Waiting 30 seconds for the next update...")
+            time.sleep(30) 
 
         except KeyboardInterrupt:
             logger.info("Process stopped by user.")

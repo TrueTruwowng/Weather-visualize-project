@@ -12,7 +12,7 @@ Open-Meteo API → Producer (Python) → Kafka → Consumer (PySpark) → Postgr
 |-----------|-------------|
 | **Producer** | Fetches current weather data (temperature, humidity, wind speed) from the [Open-Meteo API](https://open-meteo.com/) for 55 Vietnamese cities and publishes it to a Kafka topic every 60 seconds. |
 | **Kafka** | Message broker running in KRaft mode (no ZooKeeper). Decouples the producer and consumer. |
-| **Consumer** | PySpark Structured Streaming job that reads from Kafka, applies 5-minute tumbling window aggregations, and writes averaged results to PostgreSQL. |
+| **Consumer** | PySpark Structured Streaming job that reads from Kafka, applies 15-second tumbling window aggregations, and writes averaged results to PostgreSQL. |
 | **PostgreSQL** | Stores aggregated weather statistics (`weather_stats` table). |
 | **Grafana** | Connects to PostgreSQL for dashboard visualization. |
 
@@ -35,6 +35,13 @@ Open-Meteo API → Producer (Python) → Kafka → Consumer (PySpark) → Postgr
 ├── .env                   # Environment variables (not committed)
 └── .gitignore
 ```
+
+## Demo
+
+The following demo recordings are included in the project showcase:
+
+1. `Screen Recording 2026-04-16 165344.mp4`
+2. `Screen Recording 2026-04-16 165443.mp4`
 
 ## Setup
 
@@ -80,21 +87,50 @@ docker compose up -d
 
 This starts Kafka (port 9092), PostgreSQL (port 5433), and Grafana (port 3000).
 
-### 5. Run the pipeline
+### 5. Create database and table
+
+If you use `docker-compose.yml` as-is, PostgreSQL automatically creates database `openmeteo-weather` on first start.
+
+To create/check manually:
+
+```bash
+# Open psql inside container
+docker exec -it postgres-local psql -U admin -d openmeteo-weather
+
+# Create table (if it does not exist)
+CREATE TABLE IF NOT EXISTS weather_stats (
+	window_start TIMESTAMP,
+	window_end TIMESTAMP,
+	city TEXT,
+	province TEXT,
+	avg_temp DOUBLE PRECISION,
+	avg_wind_speed DOUBLE PRECISION
+);
+```
+
+Quick check:
+
+```bash
+docker exec -it postgres-local psql -U admin -d openmeteo-weather -c "\dt"
+```
+
+### 6. Run the pipeline
+
+Run manually (recommended on Windows):
+
+```bash
+# Terminal 1 - Producer
+python Producer.py
+
+# Terminal 2 - Consumer
+spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0,org.postgresql:postgresql:42.5.4 Consumer.py
+```
+
+Or run all using script (Git Bash / Linux / macOS):
 
 ```bash
 chmod +x run.sh
 ./run.sh
-```
-
-Or run each component individually:
-
-```bash
-# Terminal 1 – Producer
-python Producer.py
-
-# Terminal 2 – Consumer
-spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0,org.postgresql:postgresql:42.5.4 Consumer.py
 ```
 
 ## Grafana
