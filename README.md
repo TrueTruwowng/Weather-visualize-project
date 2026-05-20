@@ -40,13 +40,6 @@ Open-Meteo API → Producer (Python) → Kafka → Consumer (PySpark) → Postgr
 
 The following demo recordings are included in the project showcase:
 
-
-https://github.com/user-attachments/assets/40754d91-d657-480b-9fe1-4a7987e1b52c
-
-
-
-https://github.com/user-attachments/assets/5937e62c-e3f2-4451-a936-d60e0a7de5c2
-
 <img width="698" height="690" alt="Screenshot 2026-04-16 165449" src="https://github.com/user-attachments/assets/547a3576-855f-40dd-ad9a-83634ac9087f" />
 
 
@@ -136,7 +129,7 @@ spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0,org.pos
 Or run all using script (Git Bash / Linux / macOS):
 
 ```bash
-chmod +x run.sh
+bash run.sh
 ./run.sh
 ```
 
